@@ -1,4 +1,4 @@
-const {conexaoBanco} = require ('./database')
+const conexaoBanco = require ('./database');
 
 async function listarUsuarios(){
     const conexao = await conexaoBanco();
@@ -6,4 +6,5 @@ async function listarUsuarios(){
     return rows;
 }
 
+async
 module.exports = {listarUsuarios};
