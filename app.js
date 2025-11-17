@@ -1,6 +1,7 @@
 const express = require('express'); 
 const bodyParser = require('body-parser');
 const {listarUsuarios} = require ('./usuario');
+const {adicionarUsuario} = require ('./usuario');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -11,12 +12,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/usuario', async (req, res) => {
-    const [rows] = await listarUsuarios();
-    res.send(`Lista de usuários\n ${JSON.stringify(rows)}`);
+    try{
+    const rows = await listarUsuarios();
+    res.status(200).send(`Lista de usuários\n ${JSON.stringify(rows)}`);
+    }catch (error){
+        res.status(500).json({
+            'error': "erro ao buscar usuários"
+        })
+    }
 });
-app.post('/usuario', (req, res) => {
+
+app.post('/usuario', async (req, res) => {
     let body = req.body;
-    res.send(`body: ${JSON.stringify(body)}`); 
+    const resultado = await adicionarUsuario(body); 
+    res.send(`sucesso`); 
+    
 });
 app.put('/usuario', (req, res) => {
     res.send(`Atualiza usuário existente`);

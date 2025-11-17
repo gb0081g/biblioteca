@@ -1,10 +1,27 @@
-const conexaoBanco = require ('./database');
+const conexaoBanco = require('./database');
 
-async function listarUsuarios(){
+async function listarUsuarios() {
     const conexao = await conexaoBanco();
-    const [rows] = await conexao.execute('SELECT * FROM usuario');
-    return rows;
+    try {
+        const [rows] = await conexao.execute('SELECT * FROM usuario');
+        return rows; 
+    } catch (error) {
+        throw new Error('Erro ao listar usuários: ' + (error));
+    }
 }
 
-async
-module.exports = {listarUsuarios};
+async function adicionarUsuario(data) {
+    const conexao = await conexaoBanco();
+    try {
+        const { nome, email, tipo, tel } = data;
+        const [result] = await conexao.execute(
+            'INSERT INTO usuario (nome, email, tipo, tel) VALUES (?, ?, ?, ?)',
+            [nome, email, tipo, tel]
+        );
+        return true;
+    } catch (error) {
+        throw new Error('Erro ao adicionar usuário: ' + (error));
+    }
+}
+
+module.exports = { listarUsuarios, adicionarUsuario };
